@@ -12,76 +12,105 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
--include device/htc/msm7x30-common/BoardConfigCommon.mk
+# Common stuff
+DEVICE_PACKAGE_OVERLAYS += device/htc/msm7x30-common/overlay
 
-# inherit from common msm7x30 Recovery
--include device/htc/7x30-recovery/BoardConfigCommon.mk
-
-TARGET_NO_BOOTLOADER := true
-
+# Platform
 TARGET_BOARD_PLATFORM := msm7x30
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 
+# Vendor
+BOARD_VENDOR := htc
+
+# Bootloader
+TARGET_NO_BOOTLOADER := true
+
+# Architecture
+TARGET_ARCH := arm
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
+ARCH_ARM_HAVE_VFP := true
+USE_MALLOC_ALIGNMENT := 16
+TARGET_HAVE_TSLIB := false
 
-TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
+# Kernel
+TARGET_KERNEL_SOURCE := kernel/htc/msm7x30
 
-TARGET_SPECIFIC_HEADER_PATH := device/htc/msm7x30-common/include
+# Scorpion optimizations
+TARGET_USE_SCORPION_BIONIC_OPTIMIZATION := true
+TARGET_USE_SCORPION_PLD_SET := true
+TARGET_SCORPION_BIONIC_PLDOFFS := 6
+TARGET_SCORPION_BIONIC_PLDSIZE := 128
 
-# Wifi related defines
-BOARD_WPA_SUPPLICANT_DRIVER      := WEXT
-WPA_SUPPLICANT_VERSION           := VER_0_8_X
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
-BOARD_WLAN_DEVICE                := bcm4329
-WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/bcm4329/parameters/firmware_path"
-WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/bcm4329.ko"
-WIFI_DRIVER_FW_PATH_STA          := "/vendor/firmware/fw_bcm4329.bin"
-WIFI_DRIVER_FW_PATH_AP           := "/vendor/firmware/fw_bcm4329_apsta.bin"
-WIFI_DRIVER_MODULE_NAME          := "bcm4329"
-WIFI_DRIVER_MODULE_ARG           := "firmware_path=/vendor/firmware/fw_bcm4329.bin nvram_path=/proc/calibration iface_name=wlan"
-BOARD_WLAN_DEVICE_REV            := bcm4329
-WIFI_BAND                        := 802_11_ABG
+# Flags
+COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 
+# FB legacy
+BOARD_EGL_NEEDS_LEGACY_FB := true
+
+# QCOM Hardware
+BOARD_USES_QCOM_HARDWARE := true
+BOARD_USES_QCOM_LEGACY_CAM_PARAMS := true
+
+# Graphics
+TARGET_QCOM_DISPLAY_VARIANT := legacy
 BOARD_USES_ADRENO_200 := true
-
-COMMON_GLOBAL_CFLAGS += -DREFRESH_RATE=60 -DQCOM_HARDWARE
 USE_OPENGL_RENDERER := true
-TARGET_USES_C2D_COMPOSITION := false
-TARGET_USES_SF_BYPASS := false
-TARGET_HAVE_BYPASS := false
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_SF_BYPASS := true
+TARGET_HAVE_BYPASS := true
 TARGET_USES_OVERLAY := true
-TARGET_QCOM_HDMI_OUT := true
-TARGET_GRALLOC_USES_ASHMEM := false
+TARGET_GRALLOC_USES_ASHMEM := true
 TARGET_USES_GENLOCK := true
+TARGET_NO_HW_VSYNC := true
+COMMON_GLOBAL_CFLAGS += -DQCOM_NO_SECURE_PLAYBACK
+BOARD_EGL_CFG := device/htc/msm7x30-common/configs/egl.cfg
 
-TARGET_FORCE_CPU_UPLOAD := true
+# Camera
+CAMERA_USES_SURFACEFLINGER_CLIENT_STUB := true
+TARGET_DISABLE_ARM_PIE := true
+BOARD_NEEDS_MEMORYHEAPPMEM := true
+COMMON_GLOBAL_CFLAGS += -DICS_CAMERA_BLOB  -DNO_UPDATE_PREVIEW
 
-BOARD_PREBUILT_LIBAUDIO := false
-BOARD_USES_QCOM_AUDIO_VOIPMUTE := true
-BOARD_USES_QCOM_AUDIO_RESETALL := true
+# Audio
+TARGET_QCOM_AUDIO_VARIANT := caf
+BOARD_HAVE_HTC_AUDIO := true
 
+# Wifi
+WIFI_BAND := 802_11_ABGN
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_HOSTAPD_DRIVER := NL80211
+BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_WLAN_DEVICE := bcmdhd
+WIFI_DRIVER_FW_PATH_STA := "/system/vendor/firmware/fw_bcmdhd.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/vendor/firmware/fw_bcmdhd_apsta.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/vendor/firmware/fw_bcmdhd_apsta.bin"
+WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/bcmdhd/parameters/firmware_path"
+WIFI_DRIVER_MODULE_NAME := bcmdhd
+WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/bcmdhd.ko"
+BOARD_LEGACY_NL80211_STA_EVENTS := true
+
+# BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
+BOARD_BLUEDROID_VENDOR_CONF := device/htc/msm7x30-common/bluetooth/vnd_msm7x30.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR ?= device/htc/msm7x30-common/bluetooth/include
 
-BOARD_VENDOR_QCOM_AMSS_VERSION := 1200
-
-BOARD_EGL_CFG := device/htc/msm7x30-common/egl.cfg
-
-BOARD_USES_QCOM_HARDWARE := true
-BOARD_USES_QCOM_LIBS := true
-BOARD_USES_QCOM_LIBRPC := true
-BOARD_USES_QCOM_GPS := true
-BOARD_USE_QCOM_PMEM := true
-
-#BOARD_CAMERA_USE_GETBUFFERINFO := true
-
-#BOARD_OVERLAY_FORMAT_YCbCr_420_SP := true
-
-BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 1240
-
+# FM Radio
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
+
+# GPS
+TARGET_PROVIDES_GPS_LOC_API := true
+TARGET_QCOM_GPS_VARIANT := legacy
+BOARD_USES_QCOM_GPS := true
+BOARD_VENDOR_QCOM_AMSS_VERSION := 1200
+
+# Webkit
+TARGET_FORCE_CPU_UPLOAD := true
+
+

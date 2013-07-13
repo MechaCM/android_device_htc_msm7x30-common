@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+# Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -29,6 +30,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml
 
+# USB init script
 PRODUCT_COPY_FILES += \
     device/htc/msm7x30-common/init.htc7x30.usb.rc:root/init.htc7x30.usb.rc
 
@@ -46,23 +48,31 @@ PRODUCT_COPY_FILES += \
     device/htc/msm7x30-common/firmware/leia_pfp_470.fw:system/etc/firmware/leia_pfp_470.fw \
     device/htc/msm7x30-common/firmware/leia_pm4_470.fw:system/etc/firmware/leia_pm4_470.fw
 
+# Media Profiles
+PRODUCT_COPY_FILES += \
+    device/htc/msm7x30-common/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    device/htc/msm7x30-common/configs/media_codecs.xml:system/etc/media_codecs.xml
+
+# Prebuilt Audio policy
+PRODUCT_COPY_FILES += \
+    device/htc/msm7x30-common/configs/audio_policy.conf:system/etc/audio_policy.conf
+
+# Common GPS config
+PRODUCT_COPY_FILES += \
+    device/common/gps/gps.conf_EU_SUPL:system/etc/gps.conf
+
 # Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
-    audio_policy.msm7x30 \
     audio.primary.msm7x30 \
+    audio.usb.default \
     libaudioutils
 
 # Video
 PRODUCT_PACKAGES += \
     copybit.msm7x30 \
     gralloc.msm7x30 \
-    hwcomposer.msm7x30 \
-    libgenlock \
-    libmemalloc \
-    liboverlay \
-    libQcomUI \
-    libtilerenderer
+    hwcomposer.msm7x30
 
 # QCOM OMX
 PRODUCT_PACKAGES += \
@@ -73,10 +83,13 @@ PRODUCT_PACKAGES += \
     libOmxVdec \
     libOmxVenc
 
+# Power HAL
+PRODUCT_PACKAGES += \
+    power.msm7x30
+
 # Misc
 PRODUCT_PACKAGES += \
-    com.android.future.usb.accessory \
-    Torch
+    com.android.future.usb.accessory
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -90,20 +103,11 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
-# for bugmailer
-ifneq ($(TARGET_BUILD_VARIANT),user)
-    PRODUCT_PACKAGES += send_bug
-    PRODUCT_COPY_FILES += \
-        system/extras/bugmailer/bugmailer.sh:system/bin/bugmailer.sh \
-        system/extras/bugmailer/send_bug:system/bin/send_bug
-endif
-
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 # use high-density artwork where available
-PRODUCT_LOCALES += hdpi
-
+PRODUCT_LOCALES += en
 PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
